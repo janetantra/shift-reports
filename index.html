@@ -287,32 +287,32 @@
             <div class="section">
                 <div class="section-title">Shift Summary</div>
                 <div class="form-group">
-                    <label for="great">What went great today? ✅</label>
-                    <textarea id="great" placeholder="Describe the highlights..."></textarea>
+                    <label for="great">What went great today? ✅ *</label>
+                    <textarea id="great" required placeholder="Describe the highlights..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="challenging">What was challenging? ⚠️</label>
-                    <textarea id="challenging" placeholder="Any obstacles or difficulties..."></textarea>
+                    <label for="challenging">What was challenging? ⚠️ *</label>
+                    <textarea id="challenging" required placeholder="Any obstacles or difficulties..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="broken">Anything broken or needing repair? 🔧</label>
-                    <textarea id="broken" placeholder="Equipment, facilities, etc. or 'Nothing'"></textarea>
+                    <label for="broken">Anything broken or needing repair? 🔧 *</label>
+                    <textarea id="broken" required placeholder="Equipment, facilities, etc. or 'Nothing'"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="projects">Special projects completed? 📌</label>
-                    <textarea id="projects" placeholder="Any special tasks or projects or 'None'"></textarea>
+                    <label for="projects">Special projects completed? 📌 *</label>
+                    <textarea id="projects" required placeholder="Any special tasks or projects or 'None'"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="supervisor">Reviewed with (Supervisor Name) 👤</label>
-                    <input type="text" id="supervisor" placeholder="Name of supervisor">
+                    <label for="supervisor">Reviewed with (Supervisor Name) 👤 *</label>
+                    <input type="text" id="supervisor" required placeholder="Name of supervisor">
                 </div>
                 <div class="form-group">
-                    <label for="incomplete">Tasks not fully completed today? ❌</label>
-                    <textarea id="incomplete" placeholder="Include how this was communicated and agreed upon with manager + timeline"></textarea>
+                    <label for="incomplete">Tasks not fully completed today? ❌ *</label>
+                    <textarea id="incomplete" required placeholder="Include how this was communicated and agreed upon with manager + timeline"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="notes">Notes for tomorrow 📝</label>
-                    <textarea id="notes" placeholder="Any notes for the next shift..."></textarea>
+                    <label for="notes">Notes for tomorrow 📝 *</label>
+                    <textarea id="notes" required placeholder="Any notes for the next shift..."></textarea>
                 </div>
             </div>
             
@@ -414,19 +414,38 @@
             <div class="section">
                 <div class="section-title">Additional Info</div>
                 <div class="form-group">
-                    <label for="order">🛒 Anything else that needs to be purchased?</label>
-                    <textarea id="order" placeholder="List items needed or 'No'"></textarea>
+                    <label for="order">🛒 Anything else to purchase? *</label>
+                    <textarea id="order" required placeholder="List items needed or 'No'"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="improve">💭 1 thing you'd like improved at Chase's Paradise Ranch</label>
-                    <textarea id="improve" placeholder="Your suggestion..."></textarea>
+                    <label for="improve">💭 1 thing to improve at the ranch *</label>
+                    <textarea id="improve" required placeholder="Your suggestion..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="grateful">✨ 3 things you're grateful for today</label>
-                    <textarea id="grateful" placeholder="1. &#10;2. &#10;3. "></textarea>
+                    <label for="grateful">✨ 3 things grateful for today *</label>
+                    <textarea id="grateful" required placeholder="1. &#10;2. &#10;3. "></textarea>
                 </div>
             </div>
             
+            <!-- CHECKLIST BEFORE SENDING -->
+            <div class="section">
+                <div class="section-title">✔️ Checklist Before Sending</div>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <label style="display:flex; align-items:center; gap:10px; font-weight:400; cursor:pointer; font-size:15px;">
+                        <input type="checkbox" id="check1" style="width:20px; height:20px; accent-color:#2c5f8d; cursor:pointer;">
+                        Read task
+                    </label>
+                    <label style="display:flex; align-items:center; gap:10px; font-weight:400; cursor:pointer; font-size:15px;">
+                        <input type="checkbox" id="check2" style="width:20px; height:20px; accent-color:#2c5f8d; cursor:pointer;">
+                        Complete task
+                    </label>
+                    <label style="display:flex; align-items:center; gap:10px; font-weight:400; cursor:pointer; font-size:15px;">
+                        <input type="checkbox" id="check3" style="width:20px; height:20px; accent-color:#2c5f8d; cursor:pointer;">
+                        Re-read task to confirm details
+                    </label>
+                </div>
+            </div>
+
             <!-- BUTTONS -->
             <div class="button-group">
                 <button type="button" class="btn-generate" onclick="generateReport()">📋 Generate WhatsApp Report</button>
@@ -447,6 +466,13 @@
             const form = document.getElementById('reportForm');
             if (!form.checkValidity()) {
                 alert('Please fill in all required fields (*) before generating the report.');
+                return;
+            }
+            const check1 = document.getElementById('check1').checked;
+            const check2 = document.getElementById('check2').checked;
+            const check3 = document.getElementById('check3').checked;
+            if (!check1 || !check2 || !check3) {
+                alert('⚠️ Please complete all 3 checklist items before sending!');
                 return;
             }
             
@@ -568,7 +594,7 @@ ${data.grateful || '—'}
 ☐ Read task
 ☐ Complete task
 ☐ Re-read task to confirm details
-☐ Sent to Adam (or Rafael if unavailable)
+
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
             
@@ -599,6 +625,9 @@ ${data.grateful || '—'}
         function clearForm() {
             document.getElementById('reportForm').reset();
             document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('check1').checked = false;
+            document.getElementById('check2').checked = false;
+            document.getElementById('check3').checked = false;
             document.getElementById('outputBox').classList.remove('visible');
             document.getElementById('copyBtn').style.display = 'none';
         }
