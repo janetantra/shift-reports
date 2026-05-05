@@ -8,12 +8,21 @@
     <meta name="language" content="English">
     <title>Chase's Paradise Ranch - End of Shift Report</title>
     <script>
-        // Force English - block auto-translation
+        // Force English - block auto-translation aggressively
         document.documentElement.lang = 'en';
         document.documentElement.setAttribute('translate', 'no');
-        // Prevent Chrome auto-translate
+        document.documentElement.classList.add('notranslate');
+        // Prevent Chrome/Firefox auto-translate
         Object.defineProperty(navigator, 'language', { get: function() { return 'en-US'; } });
         Object.defineProperty(navigator, 'languages', { get: function() { return ['en-US', 'en']; } });
+        // Watch for translation attempts and revert
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new MutationObserver(function() {
+                document.documentElement.lang = 'en';
+                document.documentElement.setAttribute('translate', 'no');
+            });
+            observer.observe(document.documentElement, { attributes: true });
+        });
     </script>
     <style>
         * {
@@ -461,6 +470,10 @@
                         <input type="checkbox" id="check3" style="width:20px; height:20px; accent-color:#2c5f8d; cursor:pointer;">
                         Re-read task to confirm details
                     </label>
+                    <label style="display:flex; align-items:center; gap:10px; font-weight:400; cursor:pointer; font-size:15px;">
+                        <input type="checkbox" id="check4" style="width:20px; height:20px; accent-color:#2c5f8d; cursor:pointer;">
+                        All tasks on list fully completed including all details (or agreed in advance with Adam in writing otherwise)
+                    </label>
                 </div>
             </div>
 
@@ -505,7 +518,8 @@
             const check1 = document.getElementById('check1').checked;
             const check2 = document.getElementById('check2').checked;
             const check3 = document.getElementById('check3').checked;
-            if (!check1 || !check2 || !check3) {
+            const check4 = document.getElementById('check4').checked;
+            if (!check1 || !check2 || !check3 || !check4) {
                 alert('⚠️ Please check all 3 items in the Checklist for Each Task before generating the report!');
                 return;
             }
@@ -630,6 +644,7 @@ ${data.grateful || '—'}
 ${check1 ? '☑️' : '☐'} Read task
 ${check2 ? '☑️' : '☐'} Complete task
 ${check3 ? '☑️' : '☐'} Re-read task to confirm details
+${check4 ? '☑️' : '☐'} All tasks on list fully completed including all details (or agreed in advance with Adam in writing otherwise)
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
@@ -664,6 +679,7 @@ ${check3 ? '☑️' : '☐'} Re-read task to confirm details
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
             document.getElementById('check3').checked = false;
+            document.getElementById('check4').checked = false;
             document.getElementById('outputBox').classList.remove('visible');
             document.getElementById('copyBtn').style.display = 'none';
         }
